@@ -1,0 +1,20 @@
+#!/usr/bin/env python
+
+import logging
+import os
+import sys
+import time
+
+import constants
+from model import train
+from services.cloud import get_data, save_artifacts
+
+
+if __name__ == '__main__':
+  
+    get_data()
+    train()
+    save_artifacts()
+
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)
