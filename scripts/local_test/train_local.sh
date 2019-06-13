@@ -9,7 +9,6 @@ mkdir -p test_dir/input/data/training/
 rm -f test_dir/model/*
 rm -f test_dir/output/*
 
-sudo docker run -v $(pwd)/test_dir:/opt/ml --rm ${image} train
-#sudo docker run --rm ${image} train
+sudo docker run -v $(pwd)/test_dir:/opt/ml --rm ${image} task
 
 rm -rf test_dir/input

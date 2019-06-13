@@ -23,8 +23,8 @@ local-airflow-logs:
 	docker-compose logs
 
 build-image:
-	docker build -t ${NAME}:${TAG} -f Dockerfile .
+	docker build -t ${NAME} -f Dockerfile .
 
 train-local: build-image
 	cd scripts/local_test/ && \
-	/bin/sh train_local.sh ${NAME}:${TAG}
+	/bin/sh train_local.sh ${NAME}
