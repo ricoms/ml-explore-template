@@ -28,3 +28,6 @@ build-image:
 train-local: build-image
 	cd scripts/local_test/ && \
 	/bin/sh train_local.sh ${NAME}
+
+dvc-data:
+	dvc run -o data/data.csv python data/get_data.py
