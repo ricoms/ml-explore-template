@@ -1,0 +1,11 @@
+Exception during training: Classification metrics can't handle a mix of multiclass and continuous targets
+Traceback (most recent call last):
+  File "/opt/program/model.py", line 131, in train
+    cv_results = {"balanced_accuracy_score": metrics.balanced_accuracy_score(train_y, model.predict(train_X))}
+  File "/usr/local/lib/python3.6/site-packages/sklearn/metrics/classification.py", line 1741, in balanced_accuracy_score
+    C = confusion_matrix(y_true, y_pred, sample_weight=sample_weight)
+  File "/usr/local/lib/python3.6/site-packages/sklearn/metrics/classification.py", line 253, in confusion_matrix
+    y_type, y_true, y_pred = _check_targets(y_true, y_pred)
+  File "/usr/local/lib/python3.6/site-packages/sklearn/metrics/classification.py", line 81, in _check_targets
+    "and {1} targets".format(type_true, type_pred))
+ValueError: Classification metrics can't handle a mix of multiclass and continuous targets
