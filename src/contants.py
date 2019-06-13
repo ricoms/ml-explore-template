@@ -12,7 +12,7 @@ PARAM_PATH = PREFIX / 'input/config/hyperparameters.json'
 
 INPUT_COLUMNS = ['fk_customer', 'sale_order_store_date', 'sale_order_store_number', 'gmv']
 
-
+BUCKET = 'ml-explore-template'
 LABEL_INDEX = {'Setosa' : 0, 'Versicolor' : 1, 'Virginica': 2}
 LABEL_COLUMN = ["variety"]
 ID_COLUMN = ["id"]

@@ -5,16 +5,26 @@ endef
 
 TAG = $(call get_version,)
 # DOCKER_SERVER ?= "556684128444.dkr.ecr.us-east-1.amazonaws.com"
-NAME = ml-explore-template
+
 # REPOSITORY = ${DOCKER_SERVER}/${NAME}
+PWD = $(shell pwd)
+mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
+current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+NAME = $(current_dir)
 
-pull-airflow:
-	docker pull puckel/docker-airflow
 
-raise-airflow: pull-airflow
-	docker run -it -p 8080:8080 -v /dags/:/usr/local/airflow/dags --name web --rm puckel/docker-airflow webserver
+local-airflow-up:
+	docker-compose up
+
+local-airflow-down:
+	docker-compose down
+
+local-airflow-logs:
+	docker-compose logs
 
 build-image:
-	docker build -t ${NAME}:${TAG} -f src/Dockerfile src/
+	docker build -t ${NAME}:${TAG} -f Dockerfile .
 
-
+train-local: build-image
+	cd scripts/local_test/ && \
+	/bin/sh train_local.sh ${NAME}:${TAG}

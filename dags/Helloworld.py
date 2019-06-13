@@ -4,10 +4,10 @@ from datetime import datetime, timedelta
 
 # Following are defaults which can be overridden later on
 default_args = {
-    'owner': 'manasi',
+    'owner': 'ricardo.savii',
     'depends_on_past': False,
-    'start_date': datetime(2016, 4, 15),
-    'email': ['manasidalvi14@gmail.com'],
+    'start_date': datetime(2019, 6, 12),
+    'email': ['ricardo.savii@dafiti.com.br'],
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
