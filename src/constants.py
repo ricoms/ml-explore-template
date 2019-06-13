@@ -16,5 +16,5 @@ BUCKET = 'ml-explore-template'
 LABEL_INDEX = {'Setosa' : 0, 'Versicolor' : 1, 'Virginica': 2}
 LABEL_COLUMN = ["variety"]
 ID_COLUMN = ["id"]
-NUMERIC_FEATURES = ['sepal.length', 'sepal.width', 'petal.length', 'petal.width']
+NUMERIC_FEATURES = ['sepal length (cm)','sepal width (cm)','petal length (cm)','petal width (cm)']
 COLUMN_NAMES = ID_COLUMN + NUMERIC_FEATURES + LABEL_COLUMN

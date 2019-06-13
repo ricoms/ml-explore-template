@@ -1,5 +1,5 @@
 from io import StringIO
-import json
+import codecs, json
 import sys
 import time
 import traceback
@@ -11,6 +11,8 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
+from sklearn.model_selection import cross_validate
+from sklearn.metrics import make_scorer, confusion_matrix
 
 import constants
 from services.logger import set_up_logging
@@ -98,20 +100,22 @@ def train():
             trainingParams = {}
 
         # Take the set of files and read them all into a single pandas dataframe
-        input_files = [ TRAINING_PATH / file for file in TRAINING_PATH.iterdir() ]
+        input_files = [ TRAINING_PATH / file for file in TRAINING_PATH.glob("*.csv") ]
+
         if len(input_files) == 0:
             raise ValueError(f'There are no files in {TRAINING_PATH}.\n' +
                               f'This usually indicates that the channel ({CHANNEL_NAME}) was incorrectly specified,\n' +
                               'the data specification in S3 was incorrectly specified or the role specified\n' +
                               'does not have permission to access the data.')
-        raw_data = [ pd.read_csv(file, sep=',', header=None) for file in input_files ]
-        raw_data = pd.concat(raw_data)
+        
+        raw_data = [ pd.read_csv(file, sep=',', header=0) for file in input_files ]
+        train_data = pd.concat(raw_data)
         # train_data = preproc(raw_data, training=True)
 
         # labels are in the last column
         train_y = train_data.iloc[:,-1]
-        train_X = train_data.iloc[:,:-1]
-
+        # ids are in the first column
+        train_X = train_data.iloc[:,1:-1]
         # Now use scikit-learn's pipeline to train the model.
         class_weight = trainingParams.get("class_weight", None)
         if class_weight is not None:
@@ -122,14 +126,27 @@ def train():
         clf = lgb.LGBMClassifier
         model_name = str(clf).split('.')[-1].rstrip("'>")
         model = get_model_pipe(clf, **trainingParams)
-        model.fit(train_X, train_y)
 
+        def tn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 0]
+        def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
+        def fn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 0]
+        def tp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 1]
+        scoring = {'tp': make_scorer(tp), 'tn': make_scorer(tn),
+            'fp': make_scorer(fp), 'fn': make_scorer(fn)}
+        cv_results = cross_validate(model.fit(train_X, train_y), train_X, train_y,
+           scoring=scoring, cv=5)
+        cv_results = {k:c.tolist() for k, c in cv_results.items()}
+        # save metrics
+        
+        file_path = constants.OUTPUT_PATH / 'metrics.json'
+        json.dump(
+            cv_results,
+            codecs.open(file_path, 'w', encoding='utf-8'),
+            separators=(',', ':'), sort_keys=True, indent=4)
         # save the model
         model_file = constants.MODEL_PATH / 'model.joblib'
         dump(model, model_file)
         logger.info(f'Training {model_name} complete, saved at: {model_file}')
-        with open(constants.OUTPUT_PATH / 'success', 'w') as s:
-            s.write('Done\n')
 
     except Exception as e:
         # Write out an error file. This will be returned as the failureReason in the

@@ -1,9 +1,9 @@
-md5: 8b56edf2a6e21f103c479cfdaa7b1c4e
-cmd: python data/get_data.py
+md5: eae9b6dae39a398648fec5d9bb6aa6a2
+cmd: python scripts/local_test/test_dir/input/data/training/get_data.py
 wdir: .
 outs:
 - md5: 08face50a1517ae133376ec9017951f0
-  path: data/data.csv
+  path: scripts/local_test/test_dir/input/data/training/data.csv
   cache: true
   metric: false
   persist: false

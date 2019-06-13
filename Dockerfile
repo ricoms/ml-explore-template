@@ -34,5 +34,3 @@ RUN mkdir -p /opt/ml/input/config && \
 WORKDIR /opt/program
 
 EXPOSE 8080
-
-CMD ["--L", "local"]
