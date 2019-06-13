@@ -1,4 +1,4 @@
-md5: 53e6e44e9cf668859b10dc6744c46ac1
+md5: 595d1a6b1497d21f66e1f0ddcfdf23ab
 cmd: sudo make train-local
 wdir: .
 deps:
@@ -7,7 +7,7 @@ deps:
 - md5: 99914b932bd37a50b983c5e7c90ae93b
   path: scripts/local_test/test_dir/input/config/hyperparameters.json
 outs:
-- md5: 75f7eb77a44421125ad8a95af2a8d40b
+- md5: be34e6437f5fb253cc183326552ae2ee
   path: scripts/local_test/test_dir/output/metrics.json
   cache: false
   metric: true

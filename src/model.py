@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import cross_validate
-from sklearn.metrics import make_scorer, confusion_matrix
+from sklearn import metrics
 
 import constants
 from services.logger import set_up_logging
@@ -126,23 +126,14 @@ def train():
         clf = lgb.LGBMClassifier
         model_name = str(clf).split('.')[-1].rstrip("'>")
         model = get_model_pipe(clf, **trainingParams)
-
-        def tn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 0]
-        def fp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[0, 1]
-        def fn(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 0]
-        def tp(y_true, y_pred): return confusion_matrix(y_true, y_pred)[1, 1]
-        scoring = {'tp': make_scorer(tp), 'tn': make_scorer(tn),
-            'fp': make_scorer(fp), 'fn': make_scorer(fn)}
-        cv_results = cross_validate(model.fit(train_X, train_y), train_X, train_y,
-           scoring=scoring, cv=5)
-        cv_results = {k:c.tolist() for k, c in cv_results.items()}
-        # save metrics
-        
+        model.fit(train_X, train_y)
+        cv_results = {"balanced_accuracy_score": metrics.balanced_accuracy_score(train_y, model.predict(train_X))}
+                
         file_path = constants.OUTPUT_PATH / 'metrics.json'
         json.dump(
             cv_results,
             codecs.open(file_path, 'w', encoding='utf-8'),
-            separators=(',', ':'), sort_keys=True, indent=4)
+            separators=(',', ':'), sort_keys=True)
         # save the model
         model_file = constants.MODEL_PATH / 'model.joblib'
         dump(model, model_file)
