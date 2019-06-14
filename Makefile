@@ -26,7 +26,18 @@ build-image:
 	docker build -t ${NAME} -f Dockerfile .
 
 get-data: build-image
-	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} python services/get_data.py
+	dvc run \
+		-o test_dir/input/data/training/data.csv \
+		-d src/services/get_data.py \
+		-f data.dvc \
+		docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} python services/get_data.py
 
 train-local: build-image
-	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} task
+	dvc run \
+		-d test_dir/input/data/training/data.csv \
+		-d test_dir/input/config/hyperparameters.json \
+		-d src/task \
+		-o test_dir/model/model.joblib \
+		-M test_dir/output/metrics.json \
+		-f train.dvc \
+		docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} task
