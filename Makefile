@@ -34,3 +34,5 @@ train-local: build-image
 get-data: build-image
 	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} python services/get_data.py
 
+test:
+	echo ${PWD}

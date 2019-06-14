@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.datasets import load_iris
 
 import constants
-from services.logger import set_up_logging
+from logger import set_up_logging
 
 
 logger = set_up_logging(__name__)

@@ -22,7 +22,6 @@ from services.logger import set_up_logging
 logger = set_up_logging(__name__)
 
 
-
 # This algorithm has a single channel of input data called 'training'. Since we run in
 # File mode, the input files are copied to the directory specified here.
 CHANNEL_NAME = 'training'
