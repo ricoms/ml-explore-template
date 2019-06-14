@@ -15,7 +15,7 @@ from sklearn.model_selection import cross_validate
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression
 
-import constants
+import services.constants as constants
 from services.logger import set_up_logging
 
 
