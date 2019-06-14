@@ -25,14 +25,8 @@ local-airflow-logs:
 build-image:
 	docker build -t ${NAME} -f Dockerfile .
 
-train-local: build-image
-	git checkout $(uuidgen) && \
-	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} task
-	# git add . && \
-	# git commit -m "new training job results"
-
 get-data: build-image
 	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} python services/get_data.py
 
-test: build-image
+train-local: build-image
 	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} task
