@@ -98,6 +98,11 @@ def train():
                 trainingParams = json.load(tc)
         else:
             trainingParams = {}
+        class_weight = trainingParams.get("class_weight", None)
+        if class_weight is not None:
+            trainingParams["class_weight"] = {}
+            for k, w in class_weight.items():
+                trainingParams["class_weight"][int(k)] = w
 
         # Take the set of files and read them all into a single pandas dataframe
         input_files = [ TRAINING_PATH / file for file in TRAINING_PATH.glob("*.csv") ]
@@ -117,16 +122,12 @@ def train():
         # ids are in the first column
         train_X = train_data.iloc[:,1:-1]
         # Now use scikit-learn's pipeline to train the model.
-        class_weight = trainingParams.get("class_weight", None)
-        if class_weight is not None:
-            trainingParams["class_weight"] = {}
-            for k, w in class_weight.items():
-                trainingParams["class_weight"][int(k)] = w
 
-        clf = LinearRegression
+        clf = lgb.LGBMClassifier
         model_name = str(clf).split('.')[-1].rstrip("'>")
         model = get_model_pipe(clf, **trainingParams)
         model.fit(train_X, train_y)
+
         results = {"balanced_accuracy_score": metrics.balanced_accuracy_score(train_y, model.predict(train_X))}
                 
         file_path = constants.OUTPUT_PATH / 'metrics.json'

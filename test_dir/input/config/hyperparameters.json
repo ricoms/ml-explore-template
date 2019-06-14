@@ -1,1 +1,5 @@
-{}
+{
+    "objective": "multiclass",
+    "num_class":3,
+    "metric": "multi_logloss"
+}
