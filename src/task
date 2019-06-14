@@ -12,9 +12,11 @@ from model import train
 
 if __name__ == '__main__':
   
-    # get_data()
+    # file_path = constants.INPUT_PATH / 'train.zip'
+    # get_data(file_path, 'input/train.zip')
     train()
-    # save_artifacts()
+    # file_path = constants.MODEL_PATH / "model.joblib"
+    # save_artifacts(file_path, 'output/model.joblib')
 
     # A zero exit code causes the job to be marked a Succeeded.
     sys.exit(0)

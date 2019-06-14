@@ -10,45 +10,28 @@ from services.logger import set_up_logging
 logger = set_up_logging(__name__)
 
 
-def get_data():
+def download(file_path, remote_path):
     
-    file_path = constants.INPUT_PATH / 'train.zip'
-
     if file_path.exists():
         logger.info(f"Data already local at: {file_path}")
     else:
-        s3 = boto3.client('s3')
-        logger.info(f"Getting data from: {BUCKET}")
-        with open(file_path, 'wb') as data:
-            s3.download_fileobj(
-                BUCKET,
-                'input/train.zip',
-                data)
+        try:
+            s3 = boto3.client('s3')
+            logger.info(f"Getting {file_path} from {BUCKET}/{remote_path}")
+            with open(file_path, 'wb') as data:
+                s3.download_fileobj(BUCKET, remote_path, data)
+        except ClientError as e:
+            logging.error(e)
+            return False
+    return True
         
 
-def save_artifacts():
-    s3 = boto3.client('s3')
+def upload(file_path, remote_path):
     try:
+        s3 = boto3.client('s3')
         response = s3.upload_file(
-            str(constants.MODEL_PATH / "model.joblib"),
-            BUCKET,
-            'output/model.joblib')
+            file_path, BUCKET, remote_path)
     except ClientError as e:
         logging.error(e)
         return False
     return True
-
-
-def get_artifacts(file_path):
-    if file_path.exists():
-        return 1
-    else:
-        s3 = boto3.client('s3')
-        logger.info(f"Getting data from: {BUCKET}")
-        
-        with open(file_path, 'wb') as data:
-            s3.download_fileobj(
-                BUCKET,
-                'output/model.joblib',
-                data)        
-        return 1
