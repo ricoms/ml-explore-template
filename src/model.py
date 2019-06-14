@@ -14,7 +14,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import cross_validate
 from sklearn import metrics
 
-import constants
+import services.constants as constants
 from services.logger import set_up_logging
 
 
@@ -36,10 +36,6 @@ def get_class_label(prediction):
     for key, value in constants.LABEL_INDEX.items():
         if value == prediction:
             return key
-
-
-def get_weights_filepath():
-    return constants.MODEL_PATH / 'model.joblib'
 
 
 def load_model(weights_file):

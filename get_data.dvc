@@ -1,9 +1,9 @@
-md5: c74e1e38175ed36697cfa08f0e15e8e9
+md5: 9ade3bebccdee2492ebbae25b532803c
 cmd: make get-data
 wdir: .
 outs:
 - md5: 08face50a1517ae133376ec9017951f0
-  path: scripts/local_test/test_dir/input/data/training/data.csv
+  path: test_dir/input/data/training/data.csv
   cache: true
   metric: false
   persist: false

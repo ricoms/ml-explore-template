@@ -1,6 +1,6 @@
 
 define get_version
-$(shell git rev-parse --verify HEAD | sed -r 's/(.{8}).*/\1/g')
+	$(shell git rev-parse --verify HEAD | sed -r 's/(.{8}).*/\1/g')
 endef
 
 TAG = $(call get_version,)
@@ -26,8 +26,11 @@ build-image:
 	docker build -t ${NAME} -f Dockerfile .
 
 train-local: build-image
-	cd scripts/local_test/ && \
-	/bin/sh train_local.sh ${NAME}
+	git checkout $(uuidgen) && \
+	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} task && \
+	git add . && \
+	git commit -m "new training job results"
 
-get-data:
-	python scripts/local_test/test_dir/input/data/training/get_data.py
+get-data: build-image
+	docker run -v ${PWD}/test_dir:/opt/ml --rm ${NAME} python services/get_data.py
+
