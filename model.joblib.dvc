@@ -1,4 +1,4 @@
-md5: 6daea8fdc2748b2fe7ec7fc846abbf70
+md5: efd54cd2002b75867eb5b379b2d948cf
 cmd: make train-local
 wdir: .
 deps:
@@ -7,7 +7,7 @@ deps:
 - md5: 48002cbe36134aae14a6e980b6d0f89d
   path: test_dir/input/config/hyperparameters.json
 outs:
-- md5: f16964a7c572a95baa1d0c3e3b55de1e
+- md5: 86ef7595e23a49901efa3864db8d1098
   path: test_dir/model/model.joblib
   cache: true
   metric: false
