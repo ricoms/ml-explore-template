@@ -1,9 +1,6 @@
-import zipfile
-
 import boto3
 from botocore.exceptions import ClientError
 
-import constants
 from services.logger import set_up_logging
 
 
