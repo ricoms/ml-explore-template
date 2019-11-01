@@ -24,7 +24,7 @@ nanotime==0.5.2
 networkx==2.3
 numpy==1.16.4
 pandas==0.24.2
-Pillow==6.0.0
+Pillow==6.2.0
 ply==3.11
 pyasn1==0.4.5
 pyfiglet==0.8.post1
